@@ -1,8 +1,7 @@
-import stable from 'stable';
 import { dedent } from 'ts-dedent';
 import type { Comparator, StorySortParameter, StorySortParameterV7 } from '@storybook/addons';
 import { storySort } from './storySort';
-import type { Story, StoryIndexEntry, IndexEntry, Path, Parameters } from './types';
+import type { StoryIndexEntry, IndexEntry, Path, IndexEntryV6 } from './types';
 
 const sortStoriesCommon = (
   stories: IndexEntry[],
@@ -10,16 +9,15 @@ const sortStoriesCommon = (
   fileNameOrder: Path[]
 ) => {
   if (storySortParameter) {
-    let sortFn: Comparator<any>;
+    let sortFn: Comparator<IndexEntry>;
     if (typeof storySortParameter === 'function') {
       sortFn = storySortParameter;
     } else {
       sortFn = storySort(storySortParameter);
     }
-    stable.inplace(stories, sortFn);
+    stories.sort(sortFn as (a: IndexEntry, b: IndexEntry) => number);
   } else {
-    stable.inplace(
-      stories,
+    stories.sort(
       (s1, s2) => fileNameOrder.indexOf(s1.importPath) - fileNameOrder.indexOf(s2.importPath)
     );
   }
@@ -52,12 +50,12 @@ const toIndexEntry = (story: any): StoryIndexEntry => {
 };
 
 export const sortStoriesV6 = (
-  stories: [string, Story, Parameters, Parameters][],
+  stories: IndexEntryV6[],
   storySortParameter: StorySortParameter,
   fileNameOrder: Path[]
 ) => {
   if (storySortParameter && typeof storySortParameter === 'function') {
-    stable.inplace(stories, storySortParameter);
+    stories.sort(storySortParameter as (a: IndexEntryV6, b: IndexEntryV6) => number);
     return stories.map((s) => toIndexEntry(s[1]));
   }
 

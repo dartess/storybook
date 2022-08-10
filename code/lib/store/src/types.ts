@@ -164,3 +164,5 @@ export interface NormalizedStoriesSpecifier {
 export type ExtractOptions = {
   includeDocsOnly?: boolean;
 };
+
+export type IndexEntryV6 = [string, Story, Parameters, Parameters];
