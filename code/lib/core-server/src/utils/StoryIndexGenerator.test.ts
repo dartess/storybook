@@ -5,7 +5,6 @@ import type { NormalizedStoriesSpecifier } from '@storybook/core-common';
 import { loadCsf, getStorySortParameter } from '@storybook/csf-tools';
 import { toId } from '@storybook/csf';
 import { logger } from '@storybook/node-logger';
-import { mocked } from 'ts-jest/utils';
 
 import { StoryIndexGenerator } from './StoryIndexGenerator';
 
@@ -57,7 +56,7 @@ describe('StoryIndexGenerator', () => {
   beforeEach(() => {
     const actual = jest.requireActual('@storybook/csf-tools');
     loadCsfMock.mockImplementation(actual.loadCsf);
-    mocked(logger.warn).mockClear();
+    jest.mocked(logger.warn).mockClear();
   });
   describe('extraction', () => {
     const storiesSpecifier: NormalizedStoriesSpecifier = normalizeStoriesEntry(
@@ -681,7 +680,7 @@ describe('StoryIndexGenerator', () => {
         `);
 
         expect(logger.warn).toHaveBeenCalledTimes(1);
-        expect(mocked(logger.warn).mock.calls[0][0]).toMatchInlineSnapshot(
+        expect(jest.mocked(logger.warn).mock.calls[0][0]).toMatchInlineSnapshot(
           `"🚨 You have two component docs pages with the same name A:docs. Use \`<Meta of={} name=\\"Other Name\\">\` to distinguish them."`
         );
       });
@@ -709,7 +708,7 @@ describe('StoryIndexGenerator', () => {
         `);
 
         expect(logger.warn).toHaveBeenCalledTimes(1);
-        expect(mocked(logger.warn).mock.calls[0][0]).toMatchInlineSnapshot(
+        expect(jest.mocked(logger.warn).mock.calls[0][0]).toMatchInlineSnapshot(
           `"🚨 You have a story for A with the same name as your component docs page (Story One), so the docs page is being dropped. Use \`<Meta of={} name=\\"Other Name\\">\` to distinguish them."`
         );
       });
@@ -731,7 +730,7 @@ describe('StoryIndexGenerator', () => {
         `);
 
         expect(logger.warn).toHaveBeenCalledTimes(1);
-        expect(mocked(logger.warn).mock.calls[0][0]).toMatchInlineSnapshot(
+        expect(jest.mocked(logger.warn).mock.calls[0][0]).toMatchInlineSnapshot(
           `"🚨 You have a story for A with the same name as your default docs entry name (Story One), so the docs page is being dropped. Consider changing the story name."`
         );
       });

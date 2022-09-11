@@ -1,17 +1,17 @@
-const { ScriptTransformer } = require('@jest/transform');
+const { createScriptTransformer } = require('@jest/transform');
 
-const getNextTransformer = (fileName, config) => {
+const getNextTransformer = async (fileName, config) => {
   const self = config.transform.find(([pattern]) => new RegExp(pattern).test(fileName));
-  return new ScriptTransformer({
+  return createScriptTransformer({
     ...config,
     transform: config.transform.filter((entry) => entry !== self),
   });
 };
 
 module.exports = {
-  process(src, fileName, config, { instrument }) {
-    const transformer = getNextTransformer(fileName, config);
-    const { code } = transformer.transformSource(fileName, src, instrument);
+  async process(src, fileName, { instrument, config }) {
+    const transformer = await getNextTransformer(fileName, config);
+    const { code } = await transformer.transformSourceAsync(fileName, src, instrument);
 
     return `${code};
 if(exports.default != null) {

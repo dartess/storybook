@@ -30,6 +30,11 @@ global.localStorage = localStorageMock;
 // @ts-ignore
 global.regeneratorRuntime = regeneratorRuntime;
 
+// @ts-ignore
+// global.setImmediate = (func: any, ...args: any[]) => {
+//   global.setTimeout(func, 0, ...args);
+// };
+
 configure({ adapter: new Adapter() });
 
 /* Fail tests on PropType warnings

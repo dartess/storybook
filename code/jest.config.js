@@ -95,7 +95,14 @@ module.exports = {
   coverageDirectory: 'coverage',
   setupFilesAfterEnv: ['./jest.init.ts'],
   coverageReporters: ['lcov'],
-  testEnvironment: 'jest-environment-jsdom-thirteen',
+  testEnvironment: 'jest-environment-jsdom',
+  // TODO after updating to jest@28: maybe it can be replaced with `fakeTimers: { doNotFake: ['setImmediate'] }` ?
+  testEnvironmentOptions: {
+    beforeParse(window) {
+      // eslint-disable-next-line no-param-reassign
+      window.setImmediate = setImmediate;
+    },
+  },
   setupFiles: ['raf/polyfill'],
   testURL: 'http://localhost',
   modulePathIgnorePatterns: ['/dist/.*/__mocks__/', '/storybook-static/'],
